@@ -1,30 +1,20 @@
-import { createStore } from "redux";
+import { createReducer } from '@reduxjs/toolkit'
+import { configureStore } from '@reduxjs/toolkit';
 
 const initialState = {
   todos: [],
 };
 
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    case "add":
-      return {
-        ...state,
-        todos: [...state.todos, action.payload],
-      };
+const counterReducer = createReducer(initialState, builder => {
+    builder.addCase('add', (state, action) => {
+      state.todos.push(action.payload)
+    })
 
-    case "delete":
-      return {
-        ...state,
-        todos: [
-          ...state.todos.filter((todo, index) => index !== action.payload),
-        ],
-      };
+    builder.addCase('delete', (state, action) => {
+      state.todos = state.todos.filter((todo, index) => index !== action.payload)
+    })
+});
 
-    default:
-      return state;
-  }
-};
-
-const store = createStore(reducer);
-
-export default store;
+export const store = configureStore({
+  reducer: counterReducer
+})
